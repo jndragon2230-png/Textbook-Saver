@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - TextbookSaver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #FF6B35;
+            --dark: #1a1a2e;
+            --light: #f8f7f4;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, var(--accent), var(--dark));
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+        
+        .link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            background: #ffe5e5;
+            color: #cc0000;
+            border: 2px solid #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Sign Up</h1>
+        <p>Start saving on textbooks today!</p>
+        
+        <div id="alertContainer"></div>
+        
+        <form onsubmit="handleSignup(event)">
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="password" id="password" placeholder="Password" required minlength="6" />
+            <button type="submit">Create Account</button>
+        </form>
+        
+        <div class="link">
+            Already have an account? <a href="/login">Login</a>
+        </div>
+    </div>
+    
+    <script>
+        async function handleSignup(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email, password})
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    document.getElementById('alertContainer').innerHTML = 
+                        `<div class="alert">${data.error}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('alertContainer').innerHTML = 
+                    `<div class="alert">Error creating account</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
